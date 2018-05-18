@@ -6,6 +6,8 @@ Binary Tree Example
 3. preIt - pre-order traversal Iteratively using Depth Breadth Search
 4. inord - in-order traversal recursively
 5. inIt - in-order traversal iteratively
+6. post - post-order traversal recursively
+7. postIt - post-order traversal iteratively
 """
 
 class Node():
@@ -99,7 +101,6 @@ def inord(root):
     """
     In-order Traversal Recursively
     left, root, right
-        * some time can be saved by passing list instead of adding it continuously
     @param: a binary tree node
     @return: a list
     """
@@ -148,7 +149,6 @@ def post(root):
     """
     Post-order Traversal Recursively
     left, right, root
-        * some time can be saved by passing list instead of adding it continuously
     @param: a binary tree node
     @return: a list
     """
@@ -164,11 +164,11 @@ def post(root):
 
 def postIt(root):
     """
-    In-order Traversal Iteratively - with a stack
+    Post-order Traversal Iteratively - with a stack
         * if not using a stack, the root must be stored in a temp variable
         ** cannot go up tree. Point to children only
     left, right, root
-    @param: a binary tree node
+    @param: a binary tree Node
     @return: a list
     """
     def peak(stack):
@@ -204,12 +204,13 @@ def postIt(root):
 
     while stack:
 
+        #going up tree; pop off node and add to ordered list
         if isLeaf(node) or ascending(node, last):
             last = stack.pop()
             order.append(node.getVal())
             node = peak(stack)
 
-        else:
+        else: #going down the tree; add to the stack
             # no left child
             if node.getRightChild() and not node.getLeftChild():
                 stack.append(node.getRightChild()) 
@@ -227,24 +228,3 @@ def postIt(root):
                 node = node.getLeftChild()
 
     return order
-
-
-def main():
-    node0 = Node(0)
-    node1 = Node(1)
-    node2 = Node(2)
-    node3 = Node(3)
-    node4 = Node(4)
-    node5 = Node(5)
-
-    node3.setLeftChild(node1)
-    node3.setRightChild(node4)
-    node1.setLeftChild(node0)
-    node1.setRightChild(node2)
-    node4.setRightChild(node5)
-
-    print(postIt(node3))
-
-main()
-
-

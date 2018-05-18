@@ -144,6 +144,90 @@ def inIt(root):
 
     return order
 
+def post(root):
+    """
+    Post-order Traversal Recursively
+    left, right, root
+        * some time can be saved by passing list instead of adding it continuously
+    @param: a binary tree node
+    @return: a list
+    """
+    order = []
+
+    if root:
+        order += post(root.getLeftChild())
+        order += post(root.getRightChild())
+        order.append(root.getVal())
+
+    return order
+
+
+def postIt(root):
+    """
+    In-order Traversal Iteratively - with a stack
+        * if not using a stack, the root must be stored in a temp variable
+        ** cannot go up tree. Point to children only
+    left, right, root
+    @param: a binary tree node
+    @return: a list
+    """
+    def peak(stack):
+        """
+        next node in the stack. False if stack is empty
+        """
+        if len(stack) > 0:
+            return stack[-1]
+        return None
+
+    def isLeaf(node):
+        """
+        is the node childless?
+        """
+        if (node.getLeftChild() is None) and (node.getRightChild() is None):
+            return True
+        return False 
+
+    def ascending(node, last):
+        """
+        Were either children recently visitied? Going up the tree if True.
+        """
+        if node.getRightChild() and node.getRightChild() == last:
+            return True
+        elif node.getLeftChild() and node.getLeftChild() == last:
+            return True
+        return False
+
+    order = []
+    stack = [root]
+    last = None
+    node = root
+
+    while stack:
+
+        if isLeaf(node) or ascending(node, last):
+            last = stack.pop()
+            order.append(node.getVal())
+            node = peak(stack)
+
+        else:
+            # no left child
+            if node.getRightChild() and not node.getLeftChild():
+                stack.append(node.getRightChild()) 
+                node = node.getRightChild()
+
+            # both children
+            elif node.getLeftChild() and node.getRightChild(): 
+                stack.append(node.getRightChild())
+                stack.append(node.getLeftChild())
+                node = node.getLeftChild()
+
+            #no right child
+            else:
+                stack.append(node.getLeftChild())
+                node = node.getLeftChild()
+
+    return order
+
 
 def main():
     node0 = Node(0)
@@ -159,7 +243,7 @@ def main():
     node1.setRightChild(node2)
     node4.setRightChild(node5)
 
-    print(inIt(node3))
+    print(postIt(node3))
 
 main()
 

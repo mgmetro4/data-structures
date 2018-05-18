@@ -1,6 +1,11 @@
 """
 Python 3
 Binary Tree Example
+1. pre - pre-order traversal recursively
+2. pre2 - another recursive pre-order traversal
+3. preIt - pre-order traversal Iteratively using Depth Breadth Search
+4. inord - in-order traversal recursively
+5. inIt - in-order traversal iteratively
 """
 
 class Node():
@@ -38,6 +43,7 @@ def pre(root):
     """
     Pre-order Traversal Recursively
     root, left child, right child
+    @param: a binary tree node
     @return: a list
     """
     order = []
@@ -53,7 +59,8 @@ def pre2(root, order):
     """
     Another example of Pre-order Traversal Recursively
     root, left child, right child
-    @param: order - start with an empty list, ends at return
+    @param: root - a binary tree node 
+            order - start with an empty list, ends at return
     @return: a list
     """
     if not root:
@@ -70,6 +77,7 @@ def preIt(root):
     """
     Pre-order Traversal Iteratively - Depth Breadth Search with a Stack
     root, left child, right child
+    @param: a binary tree node
     @return: a list
     """
     order = []
@@ -87,6 +95,55 @@ def preIt(root):
 
     return order
 
+def inord(root):
+    """
+    In-order Traversal Recursively
+    left, root, right
+        * some time can be saved by passing list instead of adding it continuously
+    @param: a binary tree node
+    @return: a list
+    """
+    order = []
+
+    if root:
+        order += inord(root.getLeftChild())
+        order.append(root.getVal())
+        order += inord(root.getRightChild())
+
+    return order
+
+
+def inIt(root):
+    """
+    In-order Traversal Iteratively - with a stack
+        * if not using a stack, the root must be stored in a temp variable
+        ** cannot go up tree. Point to children only
+    left, root, right
+    @param: a binary tree node
+    @return: a list
+    """
+    order = []
+    if not root:
+        return order
+
+    stack = []
+    node = root
+    while stack or node: #empty stack = false. keep going while nodes exist
+        
+        while node:
+            stack.append(node) # add root
+            node = node.getLeftChild() # find left-most node
+
+        #pop off most left non-visited node
+        node = stack.pop()
+        order.append(node.getVal())
+
+        #check for right child
+        node = node.getRightChild()
+
+
+    return order
+
 
 def main():
     node0 = Node(0)
@@ -96,13 +153,13 @@ def main():
     node4 = Node(4)
     node5 = Node(5)
 
-    node3.setLeftChild(node2)
+    node3.setLeftChild(node1)
     node3.setRightChild(node4)
-    node2.setLeftChild(node0)
-    node2.setRightChild(node1)
+    node1.setLeftChild(node0)
+    node1.setRightChild(node2)
     node4.setRightChild(node5)
 
-    print(preGen(node3))
+    print(inIt(node3))
 
 main()
 
